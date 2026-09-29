@@ -70,6 +70,32 @@
       #boot .tip { font-size: 11px; color: #56697a; max-width: 70vw; text-align: center; line-height: 1.7; }
       #boot .err { color: #ff7a5c; font-size: 12px; max-width: 80vw; text-align: center; line-height: 1.6; }
       noscript { color: #ff7a5c; }
+
+      /* Project links. Kept outside the canvas so they never sit over the
+         battlefield, and small enough to read as chrome rather than UI. */
+      #links {
+        position: fixed;
+        right: 10px;
+        bottom: 8px;
+        z-index: 60;
+        display: flex;
+        gap: 14px;
+        align-items: center;
+        font-family: 'Trebuchet MS', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
+        font-size: 11px;
+        letter-spacing: 0.08em;
+        opacity: 0.55;
+        transition: opacity 0.2s ease;
+      }
+      #links:hover { opacity: 1; }
+      #links a {
+        color: #7f93a4;
+        text-decoration: none;
+        border-bottom: 1px solid transparent;
+        white-space: nowrap;
+      }
+      #links a:hover { color: var(--amber); border-bottom-color: var(--amber); }
+      @media (max-width: 560px) { #links { font-size: 10px; gap: 10px; } }
     </style>
   </head>
   <body>
@@ -80,6 +106,10 @@
       <div class="bar"><i id="boot-bar"></i></div>
       <div class="tip" id="boot-tip">正在铸造战车…</div>
     </div>
+    <nav id="links">
+      <a href="https://github.com/holynova/iron-corridor" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://holynova.github.io/iron-corridor/" target="_blank" rel="noopener">Play Online</a>
+    </nav>
     <noscript>本游戏需要启用 JavaScript。</noscript>
     <script type="module" src="/src/main.ts"></script>
   </body>
