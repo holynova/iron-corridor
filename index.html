@@ -96,6 +96,39 @@
       }
       #links a:hover { color: var(--amber); border-bottom-color: var(--amber); }
       @media (max-width: 560px) { #links { font-size: 10px; gap: 10px; } }
+
+      /* The battlefield is a fixed 800x720 landscape panel. On a phone held
+         upright it ends up tiny, so ask for a turn rather than let the player
+         squint at a postage stamp. */
+      #rotate {
+        position: fixed;
+        inset: 0;
+        z-index: 70;
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+        background: #0b0f14;
+        color: #7f93a4;
+        font: 13px 'Trebuchet MS', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
+        letter-spacing: 0.1em;
+        text-align: center;
+      }
+      #rotate .icon {
+        width: 34px;
+        height: 56px;
+        border: 3px solid var(--amber);
+        border-radius: 6px;
+        animation: turn 2.2s ease-in-out infinite;
+      }
+      @keyframes turn {
+        0%, 40% { transform: rotate(0deg); }
+        60%, 100% { transform: rotate(-90deg); }
+      }
+      @media (orientation: portrait) and (max-width: 760px) {
+        #rotate { display: flex; }
+      }
     </style>
   </head>
   <body>
@@ -106,9 +139,13 @@
       <div class="bar"><i id="boot-bar"></i></div>
       <div class="tip" id="boot-tip">正在铸造战车…</div>
     </div>
+    <div id="rotate">
+      <div class="icon"></div>
+      <div>请横屏游玩 · ROTATE YOUR PHONE</div>
+    </div>
     <nav id="links">
-      <a href="https://github.com/holynova/iron-corridor" target="_blank" rel="noopener">GitHub</a>
-      <a href="https://holynova.github.io/iron-corridor/" target="_blank" rel="noopener">Play Online</a>
+      <a href="https://github.com/holynova/tank-roguelike" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://holynova.github.io/tank-roguelike/" target="_blank" rel="noopener">Play Online</a>
     </nav>
     <noscript>本游戏需要启用 JavaScript。</noscript>
     <script type="module" src="/src/main.ts"></script>
