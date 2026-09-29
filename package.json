@@ -1,0 +1,22 @@
+{
+  "name": "tank-roguelike",
+  "version": "1.0.0",
+  "private": true,
+  "description": "铁甲回廊 / Iron Corridor — a web tank-battler roguelike built with Phaser 3",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview --port 4173",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": ["game", "roguelike", "phaser", "tank", "canvas"],
+  "license": "MIT",
+  "dependencies": {
+    "phaser": "^3.90.0"
+  },
+  "devDependencies": {
+    "typescript": "^7.0.2",
+    "vite": "^8.3.1"
+  }
+}
