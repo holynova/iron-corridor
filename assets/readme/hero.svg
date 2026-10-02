@@ -1,0 +1,268 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 440" width="100%" height="100%">
+  <title>Iron Corridor - Project Hero</title>
+  <defs>
+    <!-- CRT Cabinet Background Gradient -->
+    <linearGradient id="arcadeBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f121d" />
+      <stop offset="50%" stop-color="#090b12" />
+      <stop offset="100%" stop-color="#05060a" />
+    </linearGradient>
+
+    <!-- CRT Screen Background Gradient -->
+    <radialGradient id="crtGlass" cx="50%" cy="50%" r="65%">
+      <stop offset="0%" stop-color="#141a29" />
+      <stop offset="80%" stop-color="#0a0e17" />
+      <stop offset="100%" stop-color="#060910" />
+    </radialGradient>
+
+    <!-- Phosphor Glows -->
+    <radialGradient id="amberPhosphor" cx="20%" cy="30%" r="55%">
+      <stop offset="0%" stop-color="#ffb028" stop-opacity="0.18" />
+      <stop offset="100%" stop-color="#ffb028" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="mintPhosphor" cx="80%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#6fe3b0" stop-opacity="0.15" />
+      <stop offset="100%" stop-color="#6fe3b0" stop-opacity="0" />
+    </radialGradient>
+
+    <!-- Title Gradients -->
+    <linearGradient id="ironGold" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#fcd424" />
+      <stop offset="50%" stop-color="#ffb028" />
+      <stop offset="100%" stop-color="#e45820" />
+    </linearGradient>
+    <linearGradient id="neonMint" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#6fe3b0" />
+      <stop offset="100%" stop-color="#bcfcfc" />
+    </linearGradient>
+
+    <!-- Scanline Pattern -->
+    <pattern id="scanlines" width="100" height="4" patternUnits="userSpaceOnUse">
+      <line x1="0" y1="0" x2="100" y2="0" stroke="#000000" stroke-width="1.2" stroke-opacity="0.35" />
+    </pattern>
+
+    <!-- Pixel Dither Pattern -->
+    <pattern id="pixelGrid" width="16" height="16" patternUnits="userSpaceOnUse">
+      <rect x="0" y="0" width="8" height="8" fill="#151b28" fill-opacity="0.4" />
+      <rect x="8" y="8" width="8" height="8" fill="#151b28" fill-opacity="0.4" />
+    </pattern>
+  </defs>
+
+  <!-- Outer Frame -->
+  <rect width="1200" height="440" rx="16" fill="url(#arcadeBg)" stroke="#222b3d" stroke-width="1.5" />
+  <rect width="1200" height="440" fill="url(#pixelGrid)" rx="16" />
+  <rect width="1200" height="440" fill="url(#amberPhosphor)" rx="16" />
+  <rect width="1200" height="440" fill="url(#mintPhosphor)" rx="16" />
+
+  <!-- Corner Brackets (Arcade Coin-Op Style) -->
+  <path d="M 24 44 L 24 24 L 44 24" fill="none" stroke="#fcd424" stroke-width="2.5" />
+  <path d="M 1176 44 L 1176 24 L 1156 24" fill="none" stroke="#6fe3b0" stroke-width="2.5" />
+  <path d="M 24 396 L 24 416 L 44 416" fill="none" stroke="#6fe3b0" stroke-width="2.5" />
+  <path d="M 1176 396 L 1176 416 L 1156 416" fill="none" stroke="#fcd424" stroke-width="2.5" />
+
+  <!-- Top Coin-Op Marquee Strip -->
+  <g transform="translate(56, 26)">
+    <rect x="0" y="2" width="14" height="14" rx="2" fill="#ff4d5e" />
+    <rect x="18" y="2" width="14" height="14" rx="2" fill="#fcd424" />
+    <rect x="36" y="2" width="14" height="14" rx="2" fill="#6fe3b0" />
+    <text x="60" y="14" font-family="'SF Mono', Monaco, Consolas, monospace" font-size="11" font-weight="700" fill="#fcd424" letter-spacing="2">ARCADE ROGUELIKE BATTLE // 1-BIT CJK RASTER ENGINE</text>
+  </g>
+
+  <!-- ==================== LEFT COLUMN: INTRO & LORE ==================== -->
+  <!-- Category Pill Badge -->
+  <g transform="translate(56, 68)">
+    <rect width="324" height="26" rx="13" fill="#171e2c" stroke="#fcd424" stroke-width="1" stroke-opacity="0.7" />
+    <circle cx="14" cy="13" r="4" fill="#fcd424" />
+    <text x="26" y="17" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="11" font-weight="800" fill="#fce068" letter-spacing="1.2">FC RETRO TANK × WEB ROGUELIKE</text>
+  </g>
+
+  <!-- Main Title -->
+  <text x="56" y="140" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="52" font-weight="900" fill="#ffffff" letter-spacing="1.5">IRON CORRIDOR</text>
+  <text x="56" y="194" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="44" font-weight="900" fill="url(#ironGold)" letter-spacing="2">铁甲回廊</text>
+
+  <!-- Subtitle -->
+  <text x="58" y="226" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'PingFang SC', sans-serif" font-size="16" font-weight="600" fill="#93a6be" letter-spacing="4">俯视角坦克对战 · 原创像素素材 · 硬核无读档</text>
+
+  <!-- Value Description -->
+  <text x="58" y="260" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="14.5" fill="#cad7e6" font-weight="400">
+    程序化单屏回廊演进：每层 3 波敌对装甲，每 5 层迎战「钢铁霸主」；
+  </text>
+  <text x="58" y="282" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="14.5" fill="#cad7e6" font-weight="400">
+    25 款质变构筑部件三选一叠加，废料回收解锁军械库永久强化。
+  </text>
+
+  <!-- Highlights Pills -->
+  <g transform="translate(58, 308)">
+    <!-- Pill 1 -->
+    <rect x="0" y="0" width="150" height="30" rx="6" fill="#131b27" stroke="#263a50" stroke-width="1" />
+    <text x="12" y="19" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="12" font-weight="700" fill="#fcd424">👾 原创 16-bit 像素</text>
+
+    <!-- Pill 2 -->
+    <rect x="158" y="0" width="150" height="30" rx="6" fill="#131b27" stroke="#263a50" stroke-width="1" />
+    <text x="170" y="19" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="12" font-weight="700" fill="#6fe3b0">⚡ 25 款部件构筑</text>
+
+    <!-- Pill 3 -->
+    <rect x="316" y="0" width="150" height="30" rx="6" fill="#131b27" stroke="#263a50" stroke-width="1" />
+    <text x="328" y="19" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="12" font-weight="700" fill="#ff4d5e">👑 5 层霸主硬核永死</text>
+  </g>
+
+  <!-- Tech Metadata Bar -->
+  <g transform="translate(58, 362)">
+    <rect x="0" y="0" width="466" height="38" rx="8" fill="#0d1420" stroke="#1c2c40" stroke-width="1" />
+    <text x="16" y="24" font-family="'SF Mono', Monaco, Consolas, monospace" font-size="12" font-weight="600" fill="#4d6b8c">ENGINE STACK:</text>
+    <text x="128" y="24" font-family="'SF Mono', Monaco, Consolas, monospace" font-size="12" font-weight="600" fill="#cad7e6">Phaser 3.90</text>
+    <circle cx="218" cy="19" r="2.5" fill="#fcd424" />
+    <text x="232" y="24" font-family="'SF Mono', Monaco, Consolas, monospace" font-size="12" font-weight="600" fill="#cad7e6">TypeScript / Vite</text>
+    <circle cx="376" cy="19" r="2.5" fill="#6fe3b0" />
+    <text x="390" y="24" font-family="'SF Mono', Monaco, Consolas, monospace" font-size="12" font-weight="600" fill="#cad7e6">Web Audio</text>
+  </g>
+
+  <!-- ==================== RIGHT COLUMN: RETRO CRT ARCADE SCREEN ==================== -->
+  <g transform="translate(560, 40)">
+    <!-- CRT Outer Bezel -->
+    <rect width="584" height="360" rx="16" fill="#111722" stroke="#243448" stroke-width="2" />
+    
+    <!-- Bezel Inner Groove & Shadow -->
+    <rect x="12" y="12" width="560" height="336" rx="12" fill="url(#crtGlass)" stroke="#1a2536" stroke-width="1.5" />
+    <!-- CRT Scanlines on Glass -->
+    <rect x="12" y="12" width="560" height="336" rx="12" fill="url(#scanlines)" />
+
+    <!-- CRT Top Marquee Status Bar -->
+    <g transform="translate(26, 26)">
+      <rect width="532" height="26" rx="4" fill="#0b1018" fill-opacity="0.85" stroke="#1d2e42" stroke-width="0.8" />
+      <text x="14" y="17" font-family="'SF Mono', Monaco, Consolas, monospace" font-size="10" font-weight="700" fill="#fcd424">1P SCORE: 08420</text>
+      <text x="180" y="17" font-family="'SF Mono', Monaco, Consolas, monospace" font-size="10" font-weight="700" fill="#6fe3b0">DEPTH: F05 // WAVE 3/3</text>
+      <text x="380" y="17" font-family="'SF Mono', Monaco, Consolas, monospace" font-size="10" font-weight="700" fill="#ff4d5e">BOSS: 钢铁霸主</text>
+    </g>
+
+    <!-- ==================== PIXEL ART BATTLEGROUND ==================== -->
+    <g transform="translate(30, 64)">
+      <!-- Arena Floor Grid -->
+      <rect width="524" height="220" rx="4" fill="#0d121c" stroke="#182333" stroke-width="1" />
+      
+      <!-- Brick Blocks Top / Bottom / Obstacles -->
+      <!-- Left Barrier -->
+      <g transform="translate(18, 30)">
+        <rect width="24" height="24" fill="#c84c0c" stroke="#fc9838" stroke-width="1" />
+        <line x1="0" y1="12" x2="24" y2="12" stroke="#602008" stroke-width="1" />
+        <line x1="12" y1="0" x2="12" y2="12" stroke="#602008" stroke-width="1" />
+        <rect y="28" width="24" height="24" fill="#c84c0c" stroke="#fc9838" stroke-width="1" />
+        <rect y="56" width="24" height="24" fill="#c84c0c" stroke="#fc9838" stroke-width="1" />
+      </g>
+
+      <!-- Crumbling Brick Barrier with Rubble -->
+      <g transform="translate(240, 70)">
+        <!-- Destroyed Brick Chunk -->
+        <rect width="18" height="18" fill="#c84c0c" stroke="#fc9838" stroke-width="1" />
+        <!-- Rubble Pixels -->
+        <rect x="22" y="4" width="4" height="4" fill="#fc9838" />
+        <rect x="26" y="12" width="5" height="5" fill="#c84c0c" />
+        <rect x="20" y="18" width="4" height="4" fill="#e8eed3" />
+        <rect x="28" y="24" width="6" height="6" fill="#fc9838" />
+      </g>
+
+      <!-- Tread marks left by Player Tank -->
+      <g transform="translate(90, 115)">
+        <line x1="-30" y1="-8" x2="10" y2="-8" stroke="#182433" stroke-width="3" stroke-dasharray="3 3" />
+        <line x1="-30" y1="8" x2="10" y2="8" stroke="#182433" stroke-width="3" stroke-dasharray="3 3" />
+      </g>
+
+      <!-- ==================== PLAYER GOLD TANK (Pixel-Style Vector) ==================== -->
+      <g transform="translate(110, 115)">
+        <!-- Tread Tracks -->
+        <rect x="-18" y="-14" width="36" height="6" fill="#1b2432" stroke="#36495d" stroke-width="1" />
+        <rect x="-18" y="8" width="36" height="6" fill="#1b2432" stroke="#36495d" stroke-width="1" />
+        
+        <!-- Tank Chassis -->
+        <rect x="-14" y="-8" width="28" height="16" fill="#fcd424" stroke="#ffb028" stroke-width="1" />
+        
+        <!-- Turret Body -->
+        <rect x="-6" y="-6" width="12" height="12" fill="#e45820" stroke="#fcd424" stroke-width="1" />
+        <circle cx="0" cy="0" r="2.5" fill="#ffffff" />
+
+        <!-- Cannon Aimed Right toward Enemies -->
+        <rect x="6" y="-2" width="18" height="4" fill="#fcd424" stroke="#e45820" stroke-width="0.8" />
+        <!-- Muzzle Flash -->
+        <polygon points="26,-6 38,0 26,6 30,0" fill="#ffffff" />
+        <circle cx="34" cy="0" r="5" fill="#fcd424" fill-opacity="0.6" />
+      </g>
+
+      <!-- Flying Bullets / Shells -->
+      <g transform="translate(170, 115)">
+        <!-- Kinetic Shell -->
+        <rect x="0" y="-2" width="8" height="4" rx="1" fill="#fcd424" stroke="#ffffff" stroke-width="0.8" />
+        <line x1="-12" y1="0" x2="-2" y2="0" stroke="#ffb028" stroke-width="2" />
+
+        <rect x="40" y="-3" width="9" height="6" rx="1.5" fill="#fcd424" stroke="#ff4d5e" stroke-width="1" />
+        <line x1="24" y1="0" x2="38" y2="0" stroke="#ff9900" stroke-width="2.5" />
+      </g>
+
+      <!-- Scrap Metal / Gears Dropped -->
+      <g transform="translate(195, 155)">
+        <circle cx="0" cy="0" r="6" fill="#ffb028" stroke="#fcd424" stroke-width="1" />
+        <circle cx="0" cy="0" r="2" fill="#0b1018" />
+        <text x="10" y="4" font-family="'SF Mono', monospace" font-size="8" font-weight="700" fill="#fcd424">+12 SCRAP</text>
+      </g>
+
+      <!-- ==================== ENEMY HEAVY TANK (Pink/Armor Hull) ==================== -->
+      <g transform="translate(320, 120)">
+        <!-- Heavy Treads -->
+        <rect x="-18" y="-15" width="36" height="7" fill="#1b2432" stroke="#ff4d5e" stroke-width="1" />
+        <rect x="-18" y="8" width="36" height="7" fill="#1b2432" stroke="#ff4d5e" stroke-width="1" />
+        <!-- Chassis -->
+        <rect x="-14" y="-9" width="28" height="18" fill="#d83c68" stroke="#ff85a8" stroke-width="1" />
+        <!-- Turret & Cannon aimed left -->
+        <rect x="-7" y="-7" width="14" height="14" fill="#a01840" />
+        <rect x="-24" y="-3" width="17" height="6" fill="#ff4d5e" />
+        <!-- HP Bar overhead -->
+        <rect x="-18" y="-23" width="36" height="4" fill="#111722" />
+        <rect x="-18" y="-23" width="20" height="4" fill="#ff4d5e" />
+      </g>
+
+      <!-- ==================== BOSS: IRON WARLORD (Right End) ==================== -->
+      <g transform="translate(450, 105)">
+        <!-- Massive Boss Tracks -->
+        <rect x="-30" y="-35" width="60" height="12" fill="#141a24" stroke="#e45820" stroke-width="1.5" />
+        <rect x="-30" y="23" width="60" height="12" fill="#141a24" stroke="#e45820" stroke-width="1.5" />
+        <!-- Giant Hull -->
+        <rect x="-24" y="-24" width="48" height="48" fill="#4d1424" stroke="#e45820" stroke-width="1.5" />
+        <polygon points="-16,-16 16,-16 20,16 -20,16" fill="#882038" />
+        <!-- Boss Dual Cannons -->
+        <rect x="-42" y="-12" width="20" height="7" fill="#ff4d5e" />
+        <rect x="-42" y="5" width="20" height="7" fill="#ff4d5e" />
+        <!-- Boss Core -->
+        <circle cx="0" cy="0" r="10" fill="#e45820" stroke="#fcd424" stroke-width="1.5" />
+        <!-- Boss Skull/Danger indicator -->
+        <text x="-4" y="4" font-family="'SF Mono', monospace" font-size="10" font-weight="900" fill="#ffffff">☠</text>
+        <!-- Boss Mega HP Bar -->
+        <rect x="-35" y="-45" width="70" height="5" fill="#111722" stroke="#e45820" stroke-width="0.8" />
+        <rect x="-35" y="-45" width="52" height="5" fill="#e45820" />
+        <text x="-20" y="-52" font-family="'SF Mono', monospace" font-size="7.5" font-weight="700" fill="#ff4d5e">WARLORD HP 74%</text>
+      </g>
+    </g>
+
+    <!-- CRT Bottom Upgrade Draft Cards Preview -->
+    <g transform="translate(26, 292)">
+      <rect width="532" height="46" rx="6" fill="#0b1018" stroke="#1b2a3c" stroke-width="1" />
+      <text x="12" y="16" font-family="'SF Mono', Monaco, Consolas, monospace" font-size="9" font-weight="700" fill="#6fe3b0">LEVEL UP // THREE-CHOICE UPGRADE DRAFT</text>
+      
+      <!-- Card 1 -->
+      <g transform="translate(10, 22)">
+        <rect width="164" height="18" rx="3" fill="#141e2b" stroke="#ffb028" stroke-width="0.8" />
+        <text x="6" y="13" font-family="-apple-system, sans-serif" font-size="9" font-weight="700" fill="#fcd424">💥 大口径炮弹 (Caliber +5)</text>
+      </g>
+
+      <!-- Card 2 -->
+      <g transform="translate(184, 22)">
+        <rect width="164" height="18" rx="3" fill="#141e2b" stroke="#6fe3b0" stroke-width="0.8" />
+        <text x="6" y="13" font-family="-apple-system, sans-serif" font-size="9" font-weight="700" fill="#6fe3b0">🏓 跳弹 (Ricochet 35%)</text>
+      </g>
+
+      <!-- Card 3 -->
+      <g transform="translate(358, 22)">
+        <rect width="164" height="18" rx="3" fill="#141e2b" stroke="#9b8cff" stroke-width="0.8" />
+        <text x="6" y="13" font-family="-apple-system, sans-serif" font-size="9" font-weight="700" fill="#9b8cff">⏳ 残像引擎 (Afterimage)</text>
+      </g>
+    </g>
+  </g>
+</svg>
