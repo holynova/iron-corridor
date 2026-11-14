@@ -11,6 +11,7 @@ export interface MetaSave {
   scrap: number;
   upgrades: Record<string, number>;
   volumes: { master: number; music: number; sfx: number };
+  muted: boolean;
 }
 
 const DEFAULT_META: MetaSave = {
@@ -24,6 +25,7 @@ const DEFAULT_META: MetaSave = {
   scrap: 0,
   upgrades: {},
   volumes: { master: 0.8, music: 0.55, sfx: 0.8 },
+  muted: false,
 };
 
 function read(): MetaSave {
@@ -76,7 +78,7 @@ export const META_UPGRADES: readonly MetaUpgradeDef[] = [
     name: '复合装甲',
     max: 5,
     icon: '🛡',
-    desc: (l) => `坦克生命上限 +${(l + 1) * 20}`,
+    desc: () => '坦克生命上限 +20',
     cost: (l) => 60 + l * 70,
   },
   {
@@ -84,7 +86,7 @@ export const META_UPGRADES: readonly MetaUpgradeDef[] = [
     name: '强化炮管',
     max: 5,
     icon: '🔩',
-    desc: (l) => `炮弹伤害 +${(l + 1) * 2}`,
+    desc: () => '炮弹伤害 +2',
     cost: (l) => 55 + l * 65,
   },
   {
@@ -92,7 +94,7 @@ export const META_UPGRADES: readonly MetaUpgradeDef[] = [
     name: '自动装填',
     max: 5,
     icon: '⚡',
-    desc: (l) => `装填时间 -${Math.min(45, (l + 1) * 7)}%`,
+    desc: () => '装填时间 -7%',
     cost: (l) => 50 + l * 60,
   },
   {
@@ -100,7 +102,7 @@ export const META_UPGRADES: readonly MetaUpgradeDef[] = [
     name: '引擎调校',
     max: 5,
     icon: '🔥',
-    desc: (l) => `移动速度 +${(l + 1) * 4}%`,
+    desc: () => '移动速度 +4%',
     cost: (l) => 45 + l * 55,
   },
   {
@@ -108,7 +110,7 @@ export const META_UPGRADES: readonly MetaUpgradeDef[] = [
     name: '战场拾荒',
     max: 5,
     icon: '💰',
-    desc: (l) => `击杀获得废料 +${(l + 1) * 20}%`,
+    desc: () => '击杀获得废料 +20%',
     cost: (l) => 50 + l * 50,
   },
   {
@@ -116,7 +118,7 @@ export const META_UPGRADES: readonly MetaUpgradeDef[] = [
     name: '应急维修',
     max: 3,
     icon: '🩹',
-    desc: (l) => `每层开始回复 ${(l + 1) * 6}% 生命`,
+    desc: () => '每层开始回复 6% 生命',
     cost: (l) => 90 + l * 110,
   },
 ];

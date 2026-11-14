@@ -1,6 +1,8 @@
 import Phaser from 'phaser';
 import { VIEW, BLOCK, ARENA_H, FIELD_X, FIELD_Y, FOOT_Y, LAYER, COLORS } from '../core/constants';
 import { PixelText } from './PixelText';
+import { PixelCjk } from './PixelCjk';
+import { getUpgrade } from '../data/upgrades';
 import { fcFrame, FcList } from './fc';
 import { audioOf } from '../core/audio';
 import type { GameScene } from '../scenes/GameScene';
@@ -13,9 +15,10 @@ const H = VIEW.height;
 /**
  * Status strip.
  *
- * Laid out like the console HUD: score and lives on the left, stage in the
+ * Laid out like the console HUD: score and kills on the left, stage in the
  * middle, remaining enemies on the right — all in the bitmap font so it reads
- * as part of the machine rather than a web overlay.
+ * as part of the machine rather than a web overlay. Chinese strings go through
+ * the CJK rasteriser: the 8x8 strip is ASCII-only and silently drops them.
  */
 export class Hud {
   private scene: GameScene;
@@ -26,17 +29,17 @@ export class Hud {
   private waveText!: PixelText;
   private scrapText!: PixelText;
   private statusText!: PixelText;
-  private livesIcons: Phaser.GameObjects.Image[] = [];
+  private killsText!: PixelText;
   private hpG!: Phaser.GameObjects.Graphics;
   private hpText!: PixelText;
   private dashG!: Phaser.GameObjects.Graphics;
   private minimap!: Phaser.GameObjects.Graphics;
   private miniTimer = 0;
   private bossBar!: Phaser.GameObjects.Graphics;
-  private bossName!: PixelText;
+  private bossName!: PixelCjk;
   private bannerTitle!: PixelText;
-  private bannerSub!: PixelText;
-  private toastText!: PixelText;
+  private bannerSub!: PixelCjk;
+  private toastText!: PixelCjk;
   private hintText!: PixelText;
   private pauseLayer?: Phaser.GameObjects.Container;
   private waveTotal = 0;
@@ -68,18 +71,9 @@ export class Hud {
     g.fillStyle(0x000000, 1);
     g.fillRect(0, FOOT_Y, W, 4);
 
-    // left column: score + lives, the way the console stacks its flags
+    // left column: score + kills. There are no spare lives: one hull, one run.
     this.scoreText = new PixelText(s, 16, 8, 'SCORE 0', { scale: 3, color: 0xfcfcfc, depth: LAYER.ui });
-    new PixelText(s, 16, 40, 'LIFE', { scale: 2, color: 0xbcbcbc, depth: LAYER.ui });
-    this.livesIcons = [];
-    for (let i = 0; i < 4; i++) {
-      const img = s.add
-        .image(68 + i * 24, 38, 'life')
-        .setOrigin(0, 0)
-        .setScale(1.5)
-        .setDepth(LAYER.ui);
-      this.livesIcons.push(img);
-    }
+    this.killsText = new PixelText(s, 16, 40, 'KILLS 0', { scale: 2, color: 0xbcbcbc, depth: LAYER.ui });
 
     // centre: stage + wave + hull
     this.stageText = new PixelText(s, W / 2, 8, 'STAGE 1', {
@@ -106,8 +100,8 @@ export class Hud {
 
     // boss bar
     this.bossBar = s.add.graphics().setDepth(LAYER.ui).setScrollFactor(0).setVisible(false);
-    this.bossName = new PixelText(s, W / 2, FIELD_Y + 8, '', {
-      scale: 3, color: 0xe45820, depth: LAYER.ui + 1, align: 'center',
+    this.bossName = new PixelCjk(s, W / 2, FIELD_Y + 18, '', {
+      scale: 1, px: 14, color: 0xe45820, depth: LAYER.ui + 1, align: 'center',
     });
     this.bossName.container.setVisible(false);
 
@@ -115,14 +109,23 @@ export class Hud {
     this.bannerTitle = new PixelText(s, W / 2, H * 0.28, '', {
       scale: 6, color: 0xfcfcfc, depth: LAYER.ui + 2, align: 'center',
     });
-    this.bannerSub = new PixelText(s, W / 2, H * 0.28 + 56, '', {
-      scale: 3, color: 0xfcd424, depth: LAYER.ui + 2, align: 'center',
+    this.bannerSub = new PixelCjk(s, W / 2, H * 0.28 + 72, '', {
+      scale: 2, px: 12, color: 0xfcd424, depth: LAYER.ui + 2, align: 'center',
     });
-    this.toastText = new PixelText(s, W / 2, H * 0.18, '', {
-      scale: 3, color: 0x58d854, depth: LAYER.ui + 2, align: 'center',
+    this.toastText = new PixelCjk(s, W / 2, H * 0.18 + 12, '', {
+      scale: 2, px: 12, color: 0x58d854, depth: LAYER.ui + 2, align: 'center',
     });
-    this.hintText = new PixelText(s, W / 2, FOOT_Y + 6, 'WASD MOVE   MOUSE AIM   FIRE   SHIFT DASH   ESC PAUSE', {
+    const touchHint = window.matchMedia('(pointer: coarse)').matches;
+    this.hintText = new PixelText(s, W / 2, FOOT_Y + 6, touchHint ? 'LEFT STICK MOVE   TOUCH RIGHT TO AIM AND FIRE' : 'WASD MOVE   MOUSE AIM   FIRE   SHIFT DASH   ESC PAUSE', {
       scale: 1, color: 0x7c7c7c, depth: LAYER.ui + 1, align: 'center',
+    });
+    // minimap legend, parked under the radar in the left margin
+    const legendY = FIELD_Y + 10 + Math.min(FIELD_X - 10, ARENA_H - 260) + 14;
+    new PixelCjk(s, FIELD_X / 2, legendY, '绿=你 白=敌', {
+      scale: 1, px: 11, color: 0xbcbcbc, depth: LAYER.ui, align: 'center',
+    });
+    new PixelCjk(s, FIELD_X / 2, legendY + 16, '橙=首领', {
+      scale: 1, px: 11, color: 0xbcbcbc, depth: LAYER.ui, align: 'center',
     });
   }
 
@@ -147,7 +150,7 @@ export class Hud {
     const run = this.run;
     if (run.isBossDepth()) {
       this.waveText.setText(run.bossActive ? 'BOSS SECTOR' : 'INCOMING...');
-      this.statusText.setText(run.bossActive ? 'LV? BOSS' : 'LV?');
+      this.statusText.setText(run.bossActive ? `LV${run.level} BOSS` : `LV${run.level}`);
       return;
     }
     const remaining = Math.max(0, Math.round(this.waveTotal * (1 - this.waveProgress)));
@@ -205,9 +208,7 @@ export class Hud {
     this.scoreText.setText(`SCORE ${run.score}`);
     this.scrapText.setText(`SCRAP ${run.scrap}`);
 
-    for (let i = 0; i < this.livesIcons.length; i++) {
-      this.livesIcons[i].setVisible(i < Math.max(0, run.lives - 1) && i < 4);
-    }
+    this.killsText.setText(`KILLS ${run.kills}`);
 
     // hull bar sits just under the wave counter
     const bw = 180;
@@ -220,7 +221,7 @@ export class Hud {
     g.fillRect(bx, 56, bw, 10);
     g.fillStyle(ratio > 0.5 ? 0x58d854 : ratio > 0.25 ? 0xfcd424 : 0xe45820, 1);
     g.fillRect(bx, 56, bw * ratio, 10);
-    this.hpText.setText(`${Math.ceil(p.hp)}`);
+    this.hpText.setText(`${Math.ceil(p.hp)}/${run.stats.maxHp}`);
 
     // dash charge pips, parked in the foot strip
     const dg = this.dashG;
@@ -319,27 +320,51 @@ export class Hud {
     const c = s.add.container(0, 0).setDepth(900).setScrollFactor(0);
     c.add(s.add.rectangle(0, 0, W, H, 0x000000, 0.86).setOrigin(0).setInteractive().setScrollFactor(0));
 
-    const frame = fcFrame(s, W / 2, H / 2, 460, 300, { border: COLORS.amber });
+    const frame = fcFrame(s, W / 2, H / 2, 460, 400, { border: COLORS.amber });
     frame.setScrollFactor(0);
     c.add(frame);
 
-    const title = new PixelText(s, W / 2, H / 2 - 108, 'PAUSE', {
+    const title = new PixelText(s, W / 2, H / 2 - 152, 'PAUSE', {
       scale: 5, color: COLORS.amber, depth: 901, align: 'center',
     });
-    const sub = new PixelText(s, W / 2, H / 2 - 64, `DEPTH ${this.run.depth}   SCORE ${this.run.score}`, {
+    const sub = new PixelText(s, W / 2, H / 2 - 108, `DEPTH ${this.run.depth}   SCORE ${this.run.score}`, {
       scale: 2, color: COLORS.bone, depth: 901, align: 'center',
     });
-    const hint = new PixelText(s, W / 2, H / 2 + 112, 'UP DOWN SELECT   SPACE CONFIRM', {
+    const owned = Object.entries(this.run.owned).sort((a, b) => b[1] - a[1]);
+    const buildLine = owned.length
+      ? owned
+          .slice(0, 4)
+          .map(([id, n]) => `${getUpgrade(id)?.name ?? id}${n > 1 ? `×${n}` : ''}`)
+          .join('  ') + (owned.length > 4 ? `  等共 ${owned.length} 种` : '')
+      : '暂无';
+    const build = new PixelCjk(s, W / 2, H / 2 - 64, `本局强化：${buildLine}`, {
+      scale: 1, px: 11, color: 0x8fa3b4, depth: 901, align: 'center',
+    });
+    const hint = new PixelText(s, W / 2, H / 2 + 160, 'UP DOWN SELECT   SPACE CONFIRM', {
       scale: 2, color: COLORS.steel, depth: 901, align: 'center',
     });
-    c.add([title.container, sub.container, hint.container]);
+    c.add([title.container, sub.container, build.container, hint.container]);
 
-    const list = new FcList(s, W / 2, H / 2 + 12, 56);
+    const list = new FcList(s, W / 2, H / 2 + 8, 56);
     list.add('RESUME', () => {
       audioOf(s).play('uiSelect');
       s.events.emit('resume-game');
     }, { width: 320, height: 46 });
-    list.add('ABANDON RUN', () => {
+    const muteBtn = list.add(audioOf(s).isMuted() ? 'UNMUTE' : 'MUTE', () => {
+      const muted = audioOf(s).toggleMuted();
+      muteBtn.setText(muted ? 'UNMUTE' : 'MUTE');
+      audioOf(s).play('uiSelect');
+    }, { width: 320, height: 46 });
+    // Abandoning forfeits the run and its scrap, so it asks twice.
+    let confirmAbandon = false;
+    const abandonBtn = list.add('ABANDON RUN', () => {
+      if (!confirmAbandon) {
+        confirmAbandon = true;
+        abandonBtn.setText('CONFIRM ABANDON');
+        sub.setText('ABANDONING LOSES THIS RUN');
+        audioOf(s).play('uiMove');
+        return;
+      }
       audioOf(s).play('uiSelect');
       this.run.finish('dead');
       s.events.emit('quit-to-menu');
@@ -354,7 +379,10 @@ export class Hud {
     };
     s.input.keyboard?.on('keydown', onKey);
     this.pauseLayer = c;
-    c.once('destroy', () => s.input.keyboard?.off('keydown', onKey));
+    c.once('destroy', () => {
+      s.input.keyboard?.off('keydown', onKey);
+      list.destroy();
+    });
   }
 
   hidePause() {

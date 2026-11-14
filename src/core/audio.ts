@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { meta, saveMeta } from './meta';
 
 type SfxKey =
   | 'shoot'
@@ -73,10 +74,21 @@ export class AudioMan {
     return v;
   }
 
+  isMuted(): boolean {
+    return meta().muted ?? false;
+  }
+
+  toggleMuted(): boolean {
+    const next = !this.isMuted();
+    saveMeta({ muted: next });
+    this.applyVolumes();
+    return next;
+  }
+
   applyVolumes() {
     if (!this.ctx) return;
     const v = this.volumes();
-    this.master.gain.value = v.master;
+    this.master.gain.value = meta().muted ? 0 : v.master;
     this.musicBus.gain.value = v.music;
     this.sfxBus.gain.value = v.sfx;
   }

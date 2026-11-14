@@ -9,7 +9,7 @@ export interface PlayerStats {
   fireRate: number; // seconds between shots
   bulletSpeed: number;
   pierce: number;
-  spread: number; // degrees, total
+  spread: number; // degrees between extra shells
   bulletsPerShot: number;
   blastRadius: number; // 0 = single target
   critChance: number;
@@ -18,12 +18,12 @@ export interface PlayerStats {
   dashCharges: number;
   dashInvuln: number;
   regen: number; // hp/sec
-  lifesteal: number; // chance to heal 1 on kill
+  lifesteal: number; // chance to heal 2 on kill
   ricochet: number; // wall bounce chance
-  magnet: number; // pickup radius bonus
+  magnet: number; // pickup attraction radius in px
   scrapBonus: number;
   thorns: number; // reflect fraction
-  critChain: number; // extra crits on kill
+  critChain: number; // chain damage fraction of the killing blow on crit kill
   overdrive: number; // fire rate gain while at low hp
   explosiveShells: number;
   homing: number;
@@ -113,7 +113,7 @@ export const UPGRADES: readonly Upgrade[] = [
   up({ id: 'invuln', name: '相位护盾', nameEn: 'Phase Shield', desc: '冲刺无敌时间 +0.18s', kind: 'trait', icon: '🌀', color: 0x6fe3b0, rarity: 'rare', max: 3, apply: (s) => { s.dashInvuln += 0.18; } }),
   up({ id: 'lifesteal', name: '虹吸涂层', nameEn: 'Siphon Coat', desc: '击杀 22% 概率回复 2 生命', kind: 'trait', icon: '🩸', color: 0xff4d5e, rarity: 'epic', max: 4, apply: (s) => { s.lifesteal += 0.22; } }),
   up({ id: 'overdrive', name: '背水一战', nameEn: 'Overdrive', desc: '生命低于 40% 时装填速度 +22%', kind: 'trait', icon: '🔥', color: 0xe0532a, rarity: 'epic', max: 3, apply: (s) => { s.overdrive += 0.22; } }),
-  up({ id: 'slowaura', name: '履带碾压', nameEn: 'Tread Crusher', desc: '周围敌人减速 22%', kind: 'trait', icon: '🪨', color: 0x6fe3b0, rarity: 'epic', max: 3, apply: (s) => { s.slowAura += 0.22; } }),
+  up({ id: 'slowaura', name: '履带碾压', nameEn: 'Tread Crusher', desc: '周围 4 格内敌人减速 22%', kind: 'trait', icon: '🪨', color: 0x6fe3b0, rarity: 'epic', max: 3, apply: (s) => { s.slowAura += 0.22; } }),
   up({ id: 'timeslow', name: '残像引擎', nameEn: 'Afterimage', desc: '击杀时 12% 概率时间减速 1.4s', kind: 'trait', icon: '⏳', color: 0x9b8cff, rarity: 'legendary', max: 3, apply: (s) => { s.timeSlowOnKill += 0.12; } }),
   up({ id: 'chain', name: '连锁反应', nameEn: 'Chain Reaction', desc: '暴击击杀时对周围敌人造成 60% 伤害', kind: 'trait', icon: '⛓', color: 0xff4d5e, rarity: 'legendary', max: 2, apply: (s) => { s.critChain += 0.6; } }),
 ];

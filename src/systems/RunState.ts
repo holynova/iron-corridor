@@ -32,8 +32,6 @@ export class RunState {
   /** drafts earned but not yet shown; they queue up one at a time */
   draftQueue: ('levelup' | 'blessing')[] = [];
   pendingDepths = 0;
-  /** remaining lives, shown as tank icons in the status strip */
-  lives = 3;
   bossActive = false;
   bossHp = 0;
   bossName = '';
@@ -63,10 +61,6 @@ export class RunState {
     return this.shotsFired === 0 ? 0 : this.shotsHit / this.shotsFired;
   }
 
-  get damageMult(): number {
-    return 1 + (this.depth - 1) * 0.06;
-  }
-
   addUpgrade(u: Upgrade): void {
     this.owned[u.id] = (this.owned[u.id] ?? 0) + 1;
     const beforeMax = this.stats.maxHp;
@@ -87,10 +81,9 @@ export class RunState {
     return leveled;
   }
 
+  /** Scrap value of a kill, after the salvage bonus. Banked only when the dropped pickup is collected. */
   addScrap(base: number): number {
-    const amount = Math.max(1, Math.round(base * (1 + this.stats.scrapBonus)));
-    this.scrap += amount;
-    return amount;
+    return Math.max(1, Math.round(base * (1 + this.stats.scrapBonus)));
   }
 
   /** Queue a draft. Several can be pending at once (multi-level kills). */

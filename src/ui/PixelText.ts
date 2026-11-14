@@ -93,7 +93,7 @@ export class PixelText {
   setScale(v: number) {
     this.opts.scale = v;
     const text = this.currentText;
-    this.letters = [];
+    // setText destroys the old glyphs from this.letters; do not clear it first
     if (text) this.setText(text);
     return this;
   }

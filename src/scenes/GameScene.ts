@@ -9,8 +9,9 @@ import { Player } from '../entities/Player';
 import { Enemy } from '../entities/Enemy';
 import { Bullet, type BulletOpts } from '../entities/Bullet';
 import { Pickup, type PickupId } from '../entities/Pickup';
-import { ENEMIES, enemyPool, scaledStats, type EnemyDef } from '../data/enemies';
+import { ENEMIES, bossForDepth, enemyPool, scaledStats, type EnemyDef } from '../data/enemies';
 import { audioOf } from '../core/audio';
+import { touchState } from '../core/touch';
 import { Hud } from '../ui/Hud';
 import { PixelText } from '../ui/PixelText';
 
@@ -90,6 +91,9 @@ export class GameScene extends Phaser.Scene {
       .setBlendMode(Phaser.BlendModes.ADD);
 
     this.setupInput();
+    touchState.dash = () => { if (this.run.phase === 'active') this.player?.tryDash(); };
+    touchState.pause = () => this.togglePause();
+    document.body.classList.add('in-game');
     audio.resume();
     audio.startMusic(this.run.seed);
     audio.setIntensity(0.25);
@@ -100,6 +104,12 @@ export class GameScene extends Phaser.Scene {
     this.events.on('quit-to-menu', () => session_menu(), this);
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       audio.stopMusic();
+      touchState.dash = null;
+      touchState.pause = null;
+      touchState.firing = false;
+      touchState.mx = 0;
+      touchState.my = 0;
+      document.body.classList.remove('in-game');
     });
 
     this.startDepth();
@@ -196,6 +206,7 @@ export class GameScene extends Phaser.Scene {
     kb.on('keydown-P', () => this.togglePause());
     this.pointerHeld = false;
     this.input.on('pointerdown', () => {
+      if (this.run.phase !== 'active') return;
       this.pointerHeld = true;
       this.player?.tryFire();
     });
@@ -218,6 +229,10 @@ export class GameScene extends Phaser.Scene {
     });
     kb.on('keydown-SHIFT', () => this.player?.tryDash());
     kb.on('keydown-F', () => this.player?.tryDash());
+    kb.on('keydown-M', () => {
+      const muted = audioOf(this).toggleMuted();
+      this.hud.toast(muted ? '已静音' : '已取消静音');
+    });
   }
 
   togglePause() {
@@ -300,7 +315,7 @@ export class GameScene extends Phaser.Scene {
     const audio = audioOf(this);
     audio.play('bossRoar');
     audio.setIntensity(1);
-    this.hud.banner('WARNING', '钢铁霸主出现');
+    this.hud.banner('WARNING', `${bossForDepth(this.run.depth).name}出现`);
     this.time.delayedCall(1400, () => {
       const spot = this.pickSpawnPoint(BLOCK * 8) ?? this.pickSpawnPoint(0);
       if (spot) this.spawnEnemy('boss', spot.x, spot.y, false);
@@ -312,12 +327,12 @@ export class GameScene extends Phaser.Scene {
 
   override update(_t: number, delta: number) {
     const dt = Math.min(48, delta) / 1000;
-    if (this.run.phase === 'dead' || this.run.phase === 'victory' || this.run.phase === 'draft') return;
+    if (this.run.phase === 'dead' || this.run.phase === 'victory' || this.run.phase === 'draft' || this.run.phase === 'paused') return;
 
     this.run.elapsed = (performance.now() - this.run.startedAt) / 1000;
     this.player.update(dt, this.aimPoint());
     this.rebuildFlow(dt);
-    if (this.pointerHeld || this.spaceHeld) this.player.tryFire();
+    if (this.pointerHeld || this.spaceHeld || touchState.firing) this.player.tryFire();
     this.applySlowAura();
     this.updateHazards(dt);
 
@@ -341,6 +356,21 @@ export class GameScene extends Phaser.Scene {
   }
 
   private aimPoint(): { x: number; y: number } {
+    // Touch fire button: auto-aim the nearest enemy so a thumb on FIRE does
+    // not need a second thumb to steer the turret.
+    if (touchState.firing) {
+      let best: Enemy | null = null;
+      let bestD = 620;
+      for (const e of this.enemies) {
+        if (e.dead) continue;
+        const d = Phaser.Math.Distance.Between(this.player.x, this.player.y, e.x, e.y);
+        if (d < bestD) {
+          bestD = d;
+          best = e;
+        }
+      }
+      if (best) return { x: best.x, y: best.y };
+    }
     const p = this.input.activePointer;
     // the pointer is in screen space; the field sits inside a fixed panel
     return { x: p.x - FIELD_X, y: p.y - FIELD_Y };
@@ -541,7 +571,8 @@ export class GameScene extends Phaser.Scene {
   }
 
   spawnEnemy(kind: string, x: number, y: number, elite: boolean) {
-    const def = ENEMIES[kind as keyof typeof ENEMIES] ?? ENEMIES.scout;
+    const def =
+      kind === 'boss' ? bossForDepth(this.run.depth) : ENEMIES[kind as keyof typeof ENEMIES] ?? ENEMIES.scout;
     const e = new Enemy(this, def, scaledStats(def, this.run.depth), x, y, elite);
     this.enemies.push(e);
     if (kind === 'boss') {
@@ -597,9 +628,10 @@ export class GameScene extends Phaser.Scene {
 
   // ------------------------------------------------------------------ damage
 
-  damagePlayer(amount: number, _sx: number, _sy: number) {
-    if (this.run.phase !== 'active') return;
-    if (this.player.hurtInvulnerable) return;
+  /** Returns true when the hit actually landed (not blocked by invulnerability). */
+  damagePlayer(amount: number, _sx: number, _sy: number): boolean {
+    if (this.run.phase !== 'active') return false;
+    if (this.player.hurtInvulnerable) return false;
     this.player.markHurt();
     this.player.hp -= amount;
     this.run.damageTaken += amount;
@@ -607,6 +639,7 @@ export class GameScene extends Phaser.Scene {
     this.shake(180, 0.012);
     this.flashDamage();
     if (this.player.hp <= 0) this.onPlayerDeath();
+    return true;
   }
 
   damageEnemy(e: Enemy, amount: number, crit: boolean, fromX: number, fromY: number) {
@@ -622,10 +655,10 @@ export class GameScene extends Phaser.Scene {
     const ang = Math.atan2(e.y - fromY, e.x - fromX);
     e.x += Math.cos(ang) * 6;
     e.y += Math.sin(ang) * 6;
-    if (e.hp <= 0) this.killEnemy(e, crit);
+    if (e.hp <= 0) this.killEnemy(e, crit, amount);
   }
 
-  killEnemy(e: Enemy, crit: boolean) {
+  killEnemy(e: Enemy, crit: boolean, killingDamage = 0) {
     if (e.dead) return;
     e.dead = true;
     this.run.kills++;
@@ -641,12 +674,12 @@ export class GameScene extends Phaser.Scene {
       for (const other of this.enemies) {
         if (other === e || other.dead) continue;
         if (Phaser.Math.Distance.Between(e.x, e.y, other.x, other.y) < BLOCK * 2.5) {
-          this.damageEnemy(other, e.maxHp * 0.1 * this.run.stats.critChain, false, e.x, e.y);
+          this.damageEnemy(other, killingDamage * this.run.stats.critChain, false, e.x, e.y);
         }
       }
     }
     if (this.run.stats.timeSlowOnKill > 0 && this.run.rng.bool(this.run.stats.timeSlowOnKill)) {
-      this.applyTimeSlow(1.2);
+      this.applyTimeSlow(1.4);
     }
 
     if (e.isBoss) {
@@ -659,7 +692,7 @@ export class GameScene extends Phaser.Scene {
     }
 
     if (this.run.grantXp(e.def.xp)) {
-      this.hud.toast(`等级提升 · LV${this.run.level}`);
+      this.hud.toast(`等级提升 LV${this.run.level}`);
       this.run.enqueueDraft('levelup');
       this.time.delayedCall(260, () => this.pumpDrafts());
     }

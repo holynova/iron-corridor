@@ -76,5 +76,8 @@ function launchRun(run: RunState): void {
 
 installSession({ launch: launchRun, menu: goToMenu });
 
+// The pause menu's ABANDON RUN reaches back here through this hook.
+(window as unknown as Record<string, unknown>).__ironMenu = goToMenu;
+
 // Debug/automation hook: lets tooling inspect and drive a live run.
 (window as unknown as Record<string, unknown>).__game = game;

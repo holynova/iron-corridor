@@ -106,7 +106,7 @@ function BLOCKS(n: number): number {
 }
 
 export function enemyPool(depth: number): EnemyDef[] {
-  return Object.values(ENEMIES).filter((e) => e.kind !== 'boss' && e.minDepth <= depth + 1);
+  return Object.values(ENEMIES).filter((e) => e.kind !== 'boss' && e.minDepth <= depth);
 }
 
 export function bossForDepth(depth: number): EnemyDef {

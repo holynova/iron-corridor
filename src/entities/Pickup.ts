@@ -103,8 +103,10 @@ export class Pickup {
     const run = this.scene.run;
     switch (this.kind) {
       case 'scrap': {
+        // Kill drops already carry the salvage bonus (see RunState.addScrap);
+        // only fresh drops (value 0) apply it here.
         const base = this.value > 0 ? this.value : this.premium ? 8 : 3;
-        const amount = Math.max(1, Math.round(base * (1 + run.stats.scrapBonus)));
+        const amount = this.value > 0 ? base : Math.max(1, Math.round(base * (1 + run.stats.scrapBonus)));
         run.scrap += amount;
         audioOf(this.scene).play('pickup');
         this.scene.floatText(player.x, player.y - 30, amount, 0xfcd424);
@@ -133,9 +135,9 @@ export class Pickup {
         this.scene.shake(520, 0.02);
         break;
       case 'weapon':
-        player.hp = Math.min(player.maxHp, player.hp + 8);
+        player.grantFirepower(20);
         audioOf(this.scene).play('powerUp');
-        this.scene.toast('火力升级');
+        this.scene.toast('火力升级：伤害 +30%，持续 20 秒');
         break;
     }
     this.expire();
