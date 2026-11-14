@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta name="theme-color" content="#0b0f14" />
     <meta name="description" content="铁甲回廊 Iron Corridor — 坦克大战 × Roguelike 网页游戏" />
-    <title>铁甲回廊 · Iron Corridor</title>
+    <title>铁甲回廊 Iron Corridor</title>
     <style>
       :root {
         --ink: #0b0f14;
@@ -97,6 +97,66 @@
       #links a:hover { color: var(--amber); border-bottom-color: var(--amber); }
       @media (max-width: 560px) { #links { font-size: 10px; gap: 10px; } }
 
+      /* Touch controls: virtual stick + buttons. Only on coarse pointers,
+         and only while a run is active (GameScene toggles body.in-game). */
+      #touch-ui {
+        display: none;
+        -webkit-touch-callout: none;
+        user-select: none;
+        -webkit-user-select: none;
+      }
+      @media (pointer: coarse) {
+        body.in-game #touch-ui { display: block; }
+      }
+      #stick {
+        position: fixed;
+        left: 18px;
+        bottom: 18px;
+        z-index: 40;
+        width: 124px;
+        height: 124px;
+        border-radius: 50%;
+        border: 2px solid rgba(252, 212, 36, 0.5);
+        background: rgba(13, 13, 20, 0.45);
+        touch-action: none;
+      }
+      #stick-knob {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        background: rgba(252, 212, 36, 0.75);
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+      }
+      #touch-btns {
+        position: fixed;
+        right: 18px;
+        bottom: 18px;
+        z-index: 40;
+        display: flex;
+        gap: 12px;
+        align-items: flex-end;
+      }
+      #touch-btns button {
+        width: 68px;
+        height: 68px;
+        border-radius: 50%;
+        border: 2px solid rgba(252, 212, 36, 0.6);
+        background: rgba(13, 13, 20, 0.55);
+        color: #fcfcfc;
+        font-size: 15px;
+        font-family: inherit;
+        touch-action: none;
+        user-select: none;
+        -webkit-user-select: none;
+      }
+      #btn-fire { width: 84px; height: 84px; border-color: rgba(228, 88, 32, 0.8); }
+      #btn-pause { width: 52px; height: 52px; font-size: 12px; }
+      #touch-btns button:active { background: rgba(252, 212, 36, 0.35); }
+
       /* The battlefield is a fixed 800x720 landscape panel. On a phone held
          upright it ends up tiny, so ask for a turn rather than let the player
          squint at a postage stamp. */
@@ -141,13 +201,72 @@
     </div>
     <div id="rotate">
       <div class="icon"></div>
-      <div>请横屏游玩 · ROTATE YOUR PHONE</div>
+      <div>请横屏游玩 / ROTATE YOUR PHONE</div>
+    </div>
+    <div id="touch-ui">
+      <div id="stick"><div id="stick-knob"></div></div>
+      <div id="touch-btns">
+        <button id="btn-pause" type="button">暂停</button>
+        <button id="btn-dash" type="button">冲刺</button>
+        <button id="btn-fire" type="button">开火</button>
+      </div>
     </div>
     <nav id="links">
-      <a href="https://github.com/holynova/tank-roguelike" target="_blank" rel="noopener">GitHub</a>
-      <a href="https://holynova.github.io/tank-roguelike/" target="_blank" rel="noopener">Play Online</a>
+      <a href="https://github.com/holynova/iron-corridor" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://holynova.github.io/iron-corridor/" target="_blank" rel="noopener">Play Online</a>
     </nav>
     <noscript>本游戏需要启用 JavaScript。</noscript>
     <script type="module" src="/src/main.ts"></script>
+    <script type="module">
+      import { touchState } from '/src/core/touch.ts';
+      const stick = document.getElementById('stick');
+      const knob = document.getElementById('stick-knob');
+      const R = 44; // max knob travel in px
+      let stickId = null;
+      const setStick = (clientX, clientY) => {
+        const r = stick.getBoundingClientRect();
+        let dx = clientX - (r.left + r.width / 2);
+        let dy = clientY - (r.top + r.height / 2);
+        const d = Math.hypot(dx, dy);
+        if (d > R) { dx = (dx / d) * R; dy = (dy / d) * R; }
+        knob.style.transform = `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px))`;
+        const nx = dx / R;
+        const ny = dy / R;
+        if (Math.hypot(nx, ny) < 0.12) { touchState.mx = 0; touchState.my = 0; }
+        else { touchState.mx = nx; touchState.my = ny; }
+      };
+      const resetStick = () => {
+        stickId = null;
+        knob.style.transform = 'translate(-50%, -50%)';
+        touchState.mx = 0;
+        touchState.my = 0;
+      };
+      stick.addEventListener('pointerdown', (e) => {
+        stickId = e.pointerId;
+        stick.setPointerCapture(e.pointerId);
+        setStick(e.clientX, e.clientY);
+      });
+      stick.addEventListener('pointermove', (e) => {
+        if (e.pointerId === stickId) setStick(e.clientX, e.clientY);
+      });
+      stick.addEventListener('pointerup', resetStick);
+      stick.addEventListener('pointercancel', resetStick);
+      const hold = (id, on, off) => {
+        const el = document.getElementById(id);
+        el.addEventListener('pointerdown', (e) => { e.preventDefault(); on(); });
+        el.addEventListener('pointerup', off);
+        el.addEventListener('pointercancel', off);
+        el.addEventListener('pointerleave', off);
+      };
+      hold('btn-fire', () => { touchState.firing = true; }, () => { touchState.firing = false; });
+      document.getElementById('btn-dash').addEventListener('pointerdown', (e) => {
+        e.preventDefault();
+        touchState.dash?.();
+      });
+      document.getElementById('btn-pause').addEventListener('pointerdown', (e) => {
+        e.preventDefault();
+        touchState.pause?.();
+      });
+    </script>
   </body>
 </html>

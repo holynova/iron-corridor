@@ -129,7 +129,7 @@ export class FcButton {
     if (opts.fit !== false) this.fitLabel();
 
     this.onClick = opts.onClick;
-    const hit = scene.add.rectangle(0, 0, this.w, this.h, 0xffffff, 0).setInteractive({ useHandCursor: true });
+    const hit = scene.add.rectangle(0, 0, this.w, this.h, 0xffffff, 0).setScrollFactor(0).setInteractive({ useHandCursor: true });
     this.container.add(hit);
     hit.on('pointerover', () => scene.events.emit('fc-hover', this));
     hit.on('pointerdown', () => this.activate());
@@ -192,6 +192,15 @@ export class FcButton {
     this.labelCjk?.setColor(this.selected ? this.accent : 0xbcbcbc);
   }
 
+  /** Relabel the button (used by two-step confirms and toggles). */
+  setText(text: string) {
+    this.labelText = text;
+    this.label?.setText(text);
+    this.labelCjk?.setText(text);
+    this.fitLabel();
+    return this;
+  }
+
   setSub(text: string) {
     this.sub?.setText(text);
     return this;
@@ -251,6 +260,11 @@ export class FcList {
 
   onChange_(fn: (i: number) => void) {
     this.onChange = fn;
+  }
+
+  /** Detach the shared hover listener so a rebuilt list does not linger. */
+  destroy() {
+    this.scene.events.off('fc-hover', this.onHover, this);
   }
 }
 

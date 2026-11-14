@@ -15,7 +15,7 @@ export const enum Cell {
   Steel = 2, // indestructible
   Water = 3, // slows nothing, blocks movement
   Trees = 4, // blocks movement, bullets pass through
-  Ice = 5, // slippery
+  Ice = 5, // decorative floor; no gameplay effect
   Oil = 6, // hazard, damages whatever sits in it
   Rubble = 7, // a brick that was shot through
   Base = 8, // the eagle

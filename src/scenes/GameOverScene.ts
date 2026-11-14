@@ -100,7 +100,7 @@ export class GameOverScene extends Phaser.Scene {
       { scale: 1, px: 12, color: 0xc7d5e0, depth: LAYER.ui + 1, align: 'center' },
     );
 
-    new PixelCjk(this, W / 2, 474, `获得废料 +${this.run.scrap}  ·  可在军械库兑换永久强化`, {
+    new PixelCjk(this, W / 2, 474, `获得废料 +${this.run.scrap}，可在军械库兑换永久强化`, {
       scale: 2, px: 12, color: COLORS.amber, depth: LAYER.ui + 1, align: 'center',
     });
 

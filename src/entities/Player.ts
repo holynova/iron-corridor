@@ -4,6 +4,7 @@ import { audioOf } from '../core/audio';
 import { moveWithWalls, resolveCircle } from '../systems/collision';
 import { cellAt, Cell } from '../systems/arena';
 import type { GameScene } from '../scenes/GameScene';
+import { touchState } from '../core/touch';
 import type { RunState } from '../systems/RunState';
 
 /** Frame offsets in the tank strip: 4 headings, then the same with frame B. */
@@ -46,6 +47,8 @@ export class Player {
   private hurtCooldown = 0;
   private shieldTimer = 0;
   private dashTimer = 0;
+  /** Seconds left on the star pickup's firepower buff. */
+  powerTimer = 0;
   private dashCooldownTimers: number[] = [];
   private regenAcc = 0;
   private blink = 0;
@@ -145,10 +148,16 @@ export class Player {
     this.shieldTimer = Math.max(this.shieldTimer, ms / 1000);
   }
 
+  /** Star pickup: +30% damage and -15% fire interval for a while. */
+  grantFirepower(seconds = 20) {
+    this.powerTimer = Math.max(this.powerTimer, seconds);
+  }
+
   private get fireInterval(): number {
     const st = this.run.stats;
     let rate = st.fireRate;
-    if (st.overdrive > 0 && this.hp / this.maxHp < 0.4) rate *= Math.max(0.4, 1 - st.overdrive);
+    if (st.overdrive > 0 && this.hp / this.maxHp < 0.4) rate /= 1 + st.overdrive;
+    if (this.powerTimer > 0) rate *= 0.85;
     return Math.max(0.08, rate);
   }
 
@@ -163,6 +172,7 @@ export class Player {
     this.invulnTimer = Math.max(0, this.invulnTimer - dt);
     this.hurtCooldown = Math.max(0, this.hurtCooldown - dt);
     this.shieldTimer = Math.max(0, this.shieldTimer - dt);
+    this.powerTimer = Math.max(0, this.powerTimer - dt);
     this.dashTimer = Math.max(0, this.dashTimer - dt);
     this.recoil = Math.max(0, this.recoil - dt * 6);
 
@@ -184,6 +194,13 @@ export class Player {
     const k = this.keys;
     let mx = (k.right.isDown || k.rightAlt.isDown ? 1 : 0) - (k.left.isDown || k.leftAlt.isDown ? 1 : 0);
     let my = (k.down.isDown || k.downAlt.isDown ? 1 : 0) - (k.up.isDown || k.upAlt.isDown ? 1 : 0);
+    // Touch joystick fills in when no key is held; its magnitude is analog.
+    let analogMag = 1;
+    if (mx === 0 && my === 0 && (touchState.mx !== 0 || touchState.my !== 0)) {
+      mx = touchState.mx;
+      my = touchState.my;
+      analogMag = Math.min(1, Math.hypot(mx, my));
+    }
     const mag = Math.hypot(mx, my);
     if (mag > 0) {
       mx /= mag;
@@ -191,7 +208,7 @@ export class Player {
     }
 
     const dashing = this.dashTimer > 0;
-    const speed = dashing ? st.speed * 3 : st.speed;
+    const speed = dashing ? st.speed * 3 : st.speed * analogMag;
     const accel = mag > 0 ? 16 : 12;
     this.vx = Phaser.Math.Linear(this.vx, mx * speed, Math.min(1, accel * dt));
     this.vy = Phaser.Math.Linear(this.vy, my * speed, Math.min(1, accel * dt));
@@ -219,8 +236,15 @@ export class Player {
       e.y -= (dy / d) * push * 0.4;
       if (!e.contactCooldown) {
         e.contactCooldown = 1;
-        this.markHurt();
-        this.scene.damagePlayer(e.contactDamageValue(), e.x, e.y);
+        // damagePlayer applies the hurt cooldown itself; marking it here
+        // first made every ram harmless (the hit was always "invulnerable").
+        if (this.scene.damagePlayer(e.contactDamageValue(), e.x, e.y)) {
+          // Spiked armour reflects melee (ramming) damage at the attacker.
+          const thorns = this.run.stats.thorns;
+          if (thorns > 0 && !e.dead) {
+            this.scene.damageEnemy(e, e.contactDamageValue() * thorns, false, this.x, this.y);
+          }
+        }
       }
     }
     const fixed = resolveCircle(this.scene.arenaRef(), { x: this.x, y: this.y }, this.radius);
@@ -257,14 +281,14 @@ export class Player {
     const muzzleDist = this.radius + 10;
     const baseAngle = this.aimAssist(this.turretAngle, 0.14);
     const crit = this.scene.run.rng.bool(st.critChance);
-    const dmg = st.damage * (crit ? st.critMult : 1);
+    const dmg = st.damage * (crit ? st.critMult : 1) * (this.powerTimer > 0 ? 1.3 : 1);
     const color = crit ? 0xfcd424 : 0xfce0a8;
 
     this.scene.spawnPlayerBullet({
       x: this.x + Math.cos(baseAngle) * muzzleDist,
       y: this.y + Math.sin(baseAngle) * muzzleDist,
       angle: baseAngle,
-      speed: 760,
+      speed: st.bulletSpeed,
       damage: dmg,
       pierce: st.pierce,
       color,
@@ -298,6 +322,10 @@ export class Player {
     const k = this.keys;
     let dx = (k.right.isDown || k.rightAlt.isDown ? 1 : 0) - (k.left.isDown || k.leftAlt.isDown ? 1 : 0);
     let dy = (k.down.isDown || k.downAlt.isDown ? 1 : 0) - (k.up.isDown || k.upAlt.isDown ? 1 : 0);
+    if (dx === 0 && dy === 0 && (touchState.mx !== 0 || touchState.my !== 0)) {
+      dx = touchState.mx;
+      dy = touchState.my;
+    }
     if (dx === 0 && dy === 0) {
       dx = Math.cos(this.angle);
       dy = Math.sin(this.angle);
@@ -366,6 +394,8 @@ export class Player {
     this.shadow.setPosition(this.x, this.y).setVisible(this.shieldTimer <= 0);
     this.shield.setPosition(this.x, this.y).setVisible(this.shieldTimer > 0);
 
+    // firepower buff reads as a warm tint while it lasts
+    this.sprite.setTint(this.powerTimer > 0 ? 0xffc46b : 0xffffff);
     // invulnerability blink, console style
     this.blink += dt;
     const on = this.invulnTimer <= 0 || Math.floor(this.blink * 14) % 2 === 0;

@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 import { LAYER, TANK_SIZE, TANK_RADIUS, BLOCK } from '../core/constants';
 import { audioOf } from '../core/audio';
 import { hasClearPath, isSpotFree, moveWithWalls, resolveCircle } from '../systems/collision';
-import { blocksBody, cellAt, Cell, type Arena } from '../systems/arena';
+import { blocksBody, type Arena } from '../systems/arena';
 import type { GameScene } from '../scenes/GameScene';
 import type { Player } from './Player';
 import type { EnemyDef } from '../data/enemies';
@@ -365,12 +365,6 @@ export class Enemy {
     this.x = moved.x;
     this.y = moved.y;
 
-    // water and mud slow a tank down even though they do not block it
-    const cell = cellAt(this.scene.arenaRef(), Math.floor(this.x / BLOCK), Math.floor(this.y / BLOCK));
-    if (cell === Cell.Water) {
-      this.vx *= 0.9;
-      this.vy *= 0.9;
-    }
 
     this.stuckTimer += dt;
     if (this.stuckTimer > 0.4) {

@@ -45,6 +45,7 @@ export class Bullet {
   dead = false;
   private age = 0;
   private life = 1.1;
+  private bounces = 0;
   private sprite: Phaser.GameObjects.Image;
   private hitSet = new Set<Enemy | Player>();
   private firstContact = true;
@@ -102,6 +103,34 @@ export class Bullet {
       return;
     }
 
+    // Seeker shells steer toward the nearest enemy ahead of them.
+    if (this.fromPlayer) {
+      const homing = this.scene.run.stats.homing;
+      if (homing > 0) {
+        let best: Enemy | null = null;
+        let bestD = 520;
+        for (const e of this.scene.enemiesList()) {
+          if (e.dead) continue;
+          const d = Phaser.Math.Distance.Between(this.x, this.y, e.x, e.y);
+          if (d >= bestD) continue;
+          const want = Math.atan2(e.y - this.y, e.x - this.x);
+          if (Math.abs(Phaser.Math.Angle.Wrap(want - this.angle)) > Math.PI / 2) continue;
+          bestD = d;
+          best = e;
+        }
+        if (best) {
+          const want = Math.atan2(best.y - this.y, best.x - this.x);
+          const next = Phaser.Math.Angle.RotateTo(this.angle, want, homing * dt);
+          if (next !== this.angle) {
+            this.angle = next;
+            this.vx = Math.cos(next) * this.speed;
+            this.vy = Math.sin(next) * this.speed;
+            this.sprite.setRotation(next - Math.PI / 2);
+          }
+        }
+      }
+    }
+
     this.x += this.vx * dt;
     this.y += this.vy * dt;
 
@@ -117,6 +146,26 @@ export class Bullet {
       if (this.fromPlayer && cell === Cell.Brick) this.scene.damageBrickAt(this.x, this.y);
       audioOf(this.scene).play('hitWall');
       this.scene.spawnDebris(this.x, this.y, 4);
+      // Ricochet shells bounce off the wall instead of bursting on it.
+      if (this.fromPlayer && this.bounces < 3 && this.scene.run.rng.bool(this.scene.run.stats.ricochet)) {
+        this.bounces++;
+        const px = this.x - this.vx * dt;
+        const py = this.y - this.vy * dt;
+        const hitX = this.blocks(cellAt(arena, Math.floor(this.x / BLOCK), Math.floor(py / BLOCK)));
+        const hitY = this.blocks(cellAt(arena, Math.floor(px / BLOCK), Math.floor(this.y / BLOCK)));
+        if (hitX) this.vx = -this.vx;
+        if (hitY) this.vy = -this.vy;
+        if (!hitX && !hitY) {
+          this.vx = -this.vx;
+          this.vy = -this.vy;
+        }
+        this.angle = Math.atan2(this.vy, this.vx);
+        this.sprite.setRotation(this.angle - Math.PI / 2);
+        // step back out of the wall so the next frame does not re-collide
+        this.x = px;
+        this.y = py;
+        return;
+      }
       if (this.blast > 0) this.scene.blast(this.x, this.y, this.blastRadius, this.damage * 0.9, this.x, this.y);
       this.expire(true);
       return;
@@ -143,7 +192,10 @@ export class Bullet {
   }
 
   private onEnemy(e: Enemy) {
-    if (this.firstContact) this.scene.run.shotsHit++;
+    if (this.firstContact) {
+      this.firstContact = false;
+      this.scene.run.shotsHit++;
+    }
     audioOf(this.scene).play('hit');
     this.scene.spawnDebris(this.x, this.y, 4);
     this.scene.damageEnemy(e, this.damage, this.crit, this.x, this.y);
@@ -162,11 +214,6 @@ export class Bullet {
       return;
     }
     this.scene.damagePlayer(this.damage, this.x, this.y);
-    const st = p.run.stats;
-    if (st.thorns > 0) {
-      const src = this.scene.enemiesList().find((e) => !e.dead && Phaser.Math.Distance.Between(e.x, e.y, p.x, p.y) < BLOCK * 4);
-      if (src) this.scene.damageEnemy(src, this.damage * st.thorns, false, p.x, p.y);
-    }
     this.expire();
   }
 

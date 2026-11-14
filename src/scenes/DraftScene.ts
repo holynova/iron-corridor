@@ -22,6 +22,7 @@ export class DraftScene extends Phaser.Scene {
   private returnTo!: string;
   private cards: { container: Phaser.GameObjects.Container; upgrade: Upgrade; frame: Phaser.GameObjects.Graphics }[] = [];
   private index = 0;
+  private choosing = false;
   private resolve?: (id: string) => void;
 
   constructor() {
@@ -37,6 +38,7 @@ export class DraftScene extends Phaser.Scene {
   create() {
     this.cards = [];
     this.index = 0;
+    this.choosing = false;
     const s = this;
     const audio = audioOf(this);
     audio.resume();
@@ -95,7 +97,7 @@ export class DraftScene extends Phaser.Scene {
       });
     });
 
-    const hint = new PixelText(this, W / 2, H - 34, 'A D SWITCH   SPACE CONFIRM   R RANDOM', {
+    const hint = new PixelText(this, W / 2, H - 34, 'A D SWITCH   SPACE CONFIRM   1-3 PICK', {
       scale: 2, color: COLORS.steel, depth: LAYER.ui, align: 'center',
     });
     void hint;
@@ -107,6 +109,9 @@ export class DraftScene extends Phaser.Scene {
     kb.on('keydown-D', () => this.move(1));
     kb.on('keydown-SPACE', () => this.choose(this.index));
     kb.on('keydown-ENTER', () => this.choose(this.index));
+    kb.on('keydown-ONE', () => this.choose(0));
+    kb.on('keydown-TWO', () => this.choose(1));
+    kb.on('keydown-THREE', () => this.choose(2));
     kb.on('keydown-R', () => {
       const n = this.cards.length;
       if (n > 1) {
@@ -159,7 +164,7 @@ export class DraftScene extends Phaser.Scene {
       });
       c.add(owned.container);
     }
-    const key = new PixelText(this, 0, h / 2 - 30, `[${this.cards.length + 1}]`, {
+    const key = new PixelText(this, 0, h / 2 - 30, `${this.cards.length + 1}`, {
       scale: 2, color: 0x3d5060, depth: LAYER.ui, align: 'center',
     });
     c.add(key.container);
@@ -225,8 +230,10 @@ export class DraftScene extends Phaser.Scene {
   }
 
   private choose(i: number) {
+    if (this.choosing) return;
     const card = this.cards[i];
     if (!card) return;
+    this.choosing = true;
     audioOf(this).play('upgrade');
     const others = this.cards.filter((_, k) => k !== i);
     this.tweens.add({ targets: others.map((c) => c.container), alpha: 0, scale: 0.8, duration: 200 });
