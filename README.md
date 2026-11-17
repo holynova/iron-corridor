@@ -1,194 +1,105 @@
 <p align="center">
-  <img src="assets/readme/hero.svg" alt="Iron Corridor - 铁甲回廊 · 坦克大战 × Roguelike" width="100%">
+  <img src="./assets/readme/hero.svg" width="100%" alt="铁甲回廊 Iron Corridor — 坦克大战 × Roguelike：像素坦克在砖墙回廊中对战，右上角是钢铁霸主 Boss 血条">
 </p>
 
 <p align="center">
-  <a href="https://holynova.github.io/iron-corridor/"><img src="https://img.shields.io/badge/🎮%20Play%20Online-GitHub%20Pages-fcd424?style=for-the-badge&logo=googlechrome&logoColor=black" alt="Live Demo"></a>
-  <a href="https://phaser.io/"><img src="https://img.shields.io/badge/Phaser-3.90-ff4d5e?style=for-the-badge&logo=gamemaker&logoColor=white" alt="Phaser 3"></a>
-  <a href="https://www.typescriptlang.org/"><img src="https://img.shields.io/badge/TypeScript-7.0-3178c6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript"></a>
-  <a href="https://vitejs.dev/"><img src="https://img.shields.io/badge/Vite-8.3-646cff?style=for-the-badge&logo=vite&logoColor=white" alt="Vite"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-6fe3b0?style=for-the-badge" alt="License"></a>
+  <a href="https://holynova.github.io/iron-corridor/">▶ 在线玩 Play Online</a>
+  ·
+  <a href="https://github.com/holynova/iron-corridor">GitHub 仓库</a>
 </p>
+
+铁甲回廊是一款坦克大战 × Roguelike 网页游戏：红白机风格的俯视角坦克对战，配上硬核构筑深度。单屏程序化回廊、每层 3 波敌军、每 5 层一只巨型 Boss，升级三选一、25 种部件可叠加，废料还能换军械库永久强化。3 条命用完即宣告失败，每次出击都是全新开局。
+
+Iron Corridor is a tank-battler roguelike in the web browser: classic console-style top-down tank combat with hardcore build depth. Single-screen procedurally generated corridors, 3 waves per depth, a giant boss every 5 depths, draft-one-of-three upgrades (25 stackable parts), and scrap that buys permanent arsenal upgrades. Three lives, no continues — every run starts fresh.
+
+## 截图 / Screenshots
 
 <p align="center">
-  <strong>红白机经典俯视角坦克对战 × 硬核 Roguelike 构筑深度</strong><br>
-  原创 16-bit 像素引擎 · 单屏程序化回廊 · 25 种可叠加质变部件 · 五层巨型霸主强袭 · 军械库永久继承 · 硬核永死
+  <img src="./assets/readme/screenshot-game.png" width="420" alt="实机战斗：第 1 层第 1 波，玩家坦克在砖墙回廊中与绿、灰两辆敌坦交火">
+  <img src="./assets/readme/screenshot-menu.png" width="420" alt="主菜单：铁甲回廊标题，出击 / 军械库 / 战绩 / 说明四个选项">
 </p>
 
----
+## 玩法 / How to Play
 
-## 🕹️ 在线试玩与体验
+- **闯关**：共 30 层，每层是程序化生成的单屏回廊（砖墙、钢壁、掩体每次都不同），清掉 3 波敌军进入下一层。
+- **Boss**：每 5 层一只巨型 Boss——第 5 层「钢铁霸主」（900 HP）、第 10 层「钢铁霸主 II · 重装」（1600 HP）、第 20 层起「终焉协议 · 泰坦」（2800 HP），血量、弹速、伤害逐档跃升。
+- **三选一强化**：升级或清波后从 3 张卡里选 1 张，25 种部件均可叠加，分 4 档稀有度（普通 / 稀有 / 史诗 / 传说）。
+  - **属性**：大口径炮弹、快速装填、推进器、焊接装甲、膛线加速、纳米修复、拾荒者等。
+  - **武器质变**：分裂炮管（多发并行）、穿甲弹（贯穿）、高爆弹（范围爆炸）、跳弹（墙体反弹）、追踪弹头、暴击强化。
+  - **战术异能**：双段推进（冲刺 +1 次）、相位护盾（冲刺无敌帧延长）、虹吸涂层（击杀吸血）、背水一战（低血量加速装填）、残像引擎（击杀时滞）、连锁反应（暴击击杀殉爆）。
+- **军械库**：战斗掉落的废料可在主菜单换永久强化（船体 / 炮管 / 装填 / 引擎 / 拾荒 / 修复），死后不消失，越打越强。
+- **生命**：每局 3 条命，命用完即结算；战绩（出击次数、最深层数、最高击杀）保存在本地。
 
-- **网页端即开即玩**：[https://holynova.github.io/iron-corridor/](https://holynova.github.io/iron-corridor/)
-- **手机扫码直接体验**：
+## 敌军图鉴 / Enemies
 
-<p align="center">
-  <img src="docs/qr.png" width="160" alt="扫码手机即刻游玩铁甲回廊">
-</p>
+8 种敌军，剪影与涂装对应经典街机分级，一眼可判行为：
 
-- **项目源码仓库**：[https://github.com/holynova/iron-corridor](https://github.com/holynova/iron-corridor)
-- **实机运行截图**：
+| 敌军 | 特点 |
+| :--- | :--- |
+| 侦察兵 | 高机动迂回游击 |
+| 炮手 | 中距离 3 连发压制 |
+| 重装 | 130 HP，正面冲撞 |
+| 狙击手 | 远距离超高速单发 |
+| 冲锋者 | 210 px/s 近身撞击 |
+| 蜂群 | 成群骚扰，分散注意 |
+| 固定炮台 | 不动，96 HP，4 连发 |
+| 钢铁霸主 | Boss，900+ HP，5 连发重弹 |
 
-<p align="center">
-  <img src="docs/screenshot.png" width="85%" alt="铁甲回廊实机战斗截图">
-</p>
+## 操作 / Controls
 
----
+| 动作 | 按键 |
+| :--- | :--- |
+| 移动 | W / A / S / D 或方向键 |
+| 瞄准 | 鼠标 |
+| 开火 | 鼠标左键或空格 |
+| 冲刺（带无敌帧） | Shift 或 F |
+| 暂停 | Esc 或 P |
 
-## 🌟 游戏核心机制
+## 本地运行 / Run Locally
 
-### 1. 经典街机循环与单屏程序化回廊
-* **单屏高压战场**：没有多余的大地图跑路，每一层都是程序化生成的单屏战术封闭回廊，砖墙、钢壁与废墟掩体瞬息万变；
-* **三波敌军推进**：每层固定迎来 3 波不同兵种搭配的敌对装甲群，必须审慎利用转角掩体与跳弹清剿全场；
-* **五层霸主强袭 (Boss Protocols)**：
-  * **第 5 层**：初遇巨型首领「钢铁霸主」，拥有 900 HP 巨型装甲、5 连发重型爆弹与强力车体碾压；
-  * **第 15 层**：迎战狂暴进阶版「钢铁霸主 II · 重装」，血量与弹速大幅跃迁；
-  * **第 25+ 层**：终极防线「终焉协议 · 泰坦」，极速狂暴弹幕地狱；
-* **硬核单向历程**：战车生命归零即宣告任务失败，没有中途读档或复活币，每一次出击都是全新的战备考验。
-
----
-
-## ⚔️ 战备强化与 25 款质变构筑体系
-
-每次清理一波敌军或战车升级时，战场将立即提供**三选一强化部件（Draft System）**。25 种核心升级均支持多层叠加，共划分为 3 大维度与 4 级稀有度：
-
-### 1. 基础属性强化 (Stat Mods)
-* `大口径炮弹` (Caliber)：炮弹直伤 +5（最高 8 层）；
-* `快速装填` (Autoloader)：主炮装填间隔 -9%（最高 8 层）；
-* `推进器` (Thruster)：底盘机动速度 +10%（最高 6 层）；
-* `焊接装甲` (Welded Hull)：生命上限 +20 并瞬时恢复 20 点（最高 8 层）；
-* `膛线加速` (Rifling)：弹丸出膛初速 +15%（最高 5 层）；
-* `纳米修复` (Nanorepair · 稀有)：常驻被动每秒自我修复 0.7 点装甲（最高 6 层）；
-* `拾荒者` (Salvager)：掉落废料收益 +35%（最高 5 层）。
-
-### 2. 武器质变改装 (Weapon Mods)
-* 🔱 `分裂炮管` (Split Barrel · 稀有)：每次射击额外增发 1 枚并行炮弹；
-* 🗡 `穿甲弹` (AP Shell · 稀有)：炮弹击穿目标并可多贯穿 1 个敌坦；
-* 💣 `高爆弹` (HE Shell · 史诗)：命中引发剧烈爆炸，附加范围伤害；
-* 🏓 `跳弹` (Ricochet · 史诗)：炮弹碰撞墙体获得 35% 物理反弹机能；
-* 🎯 `追踪弹头` (Seeker · 史诗)：发射具备向心制导的追踪巡航弹丸；
-* 🔺 `弱点分析` / `穿甲弱点`：大幅提升暴击几率（+9%）与暴击爆头倍率（+0.5x）。
-
-### 3. 战术异能与天赋 (Tactical Traits)
-* 🛫 `双段推进` (Twin Thrusters · 史诗)：战术冲刺可用充能次数 +1；
-* 🌀 `相位护盾` (Phase Shield · 稀有)：冲刺期间无敌帧延长 +0.18s；
-* 🩸 `虹吸涂层` (Siphon Coat · 史诗)：击毁敌坦有 22% 几率吸血恢复 2 点生命；
-* 🔥 `背水一战` (Overdrive · 史诗)：装甲生命低于 40% 时激发过载装填速度 +22%；
-* 🪨 `履带碾压` (Tread Crusher · 史诗)：车身周围产生强力立场，减速敌群 22%；
-* ⏳ `残像引擎` (Afterimage · 传说)：击杀时触发时空凝滞（时间流速大幅减慢 1.4s）；
-* ⛓ `连锁反应` (Chain Reaction · 传说)：触发暴击击杀时向周围敌人爆射 60% 连锁殉爆伤害。
-
----
-
-## 🛡️ 敌军装甲图鉴 (Enemy Encyclopedia)
-
-敌方载具严格沿用经典控制台轮廓分级，通过剪影与涂装即可瞬间预判其战斗行为：
-
-| 敌军代号 | 经典车体外形 | 核心威胁与战斗 AI | 弹道特性 |
-| :--- | :---: | :--- | :--- |
-| **侦察兵 (Scout)** | 基础灰色底盘 | 高机动迂回穿插，寻找死角游击偷袭 | 单发中速穿甲弹 |
-| **炮手 (Gunner)** | 绿色强化底盘 | 中距离保持交火线，实施 3 连发压制射击 | 3 连发黄色高爆弹 |
-| **重装 (Heavy)** | 粉色厚重装甲 | 高达 130 HP，带头直冲掩体，近距离撞击重创 | 2 连发重型穿甲弹 |
-| **狙击手 (Sniper)** | 白色疾速底盘 | 远距离定点狙杀，弹速极快（700 px/s） | 单发超高速贯穿弹 |
-| **冲锋者 (Charger)** | 橙色突击底盘 | 210 px/s 疯狗式近身冲撞，极度危险 | 2 连发射击伴随撞击 |
-| **蜂群 (Swarmer)** | 超轻型底盘 | 成群结队蜂拥而至，分散玩家注意力 | 短间距骚扰弹 |
-| **固定炮台 (Turret)** | 重型防御工事 | 无法移动但拥有 96 HP 与 4 连发环形阻击 | 密集 4 连发弹道网 |
-| **钢铁霸主 (Boss)** | 巨型特制底盘 | 900+ HP，全图追猎，5 连发重弹与致命车体碾轧 | 巨型高爆火球弹道 |
-
----
-
-## 🕹️ 键位与操作指南
-
-| 动作指令 | 键鼠操作 | 说明 |
-| :--- | :--- | :--- |
-| **驾驶底盘移动** | **W / A / S / D** 或 **方向键** | 四向平滑机动，受车体碰撞物理约束 |
-| **火控炮塔瞄准** | **鼠标光标移动** | 炮塔独立于底盘朝向 360° 灵活瞄准 |
-| **主炮开火** | **鼠标左键** 或 **空格键 (Space)** | 倾泻主炮弹药 |
-| **战术喷射冲刺** | **Shift 键** | 瞬间爆发推进，附带专属无敌帧闪避弹幕 |
-| **战术暂停** | **Esc 键** | 呼出游戏菜单与当前战备配置详情 |
-
----
-
-## 🎨 纯手工 16-bit 像素渲染管线
-
-* **原创点阵资产**：全游戏所有素材均非外部盗用素材，而是由项目自带的脚本 `tools/gensprites.mjs` 在内存中以 `8×8` 与 `16×16` 原始像素网格直接生成；
-* **高质感帧动画**：6 种坦克各具 4 向 2 帧动态履带驱动链节、多层次爆炸破片与地形瓦片；
-* **1-bit 阈值中文字库 (PixelCjk)**：中文 UI 经过专用算法执行 1-bit 阈值栅格化与整数倍抗锯齿平移，与英文 8×8 点阵完美共用同一像素网格，保留原汁原味街机 CRT 质感。
-
----
-
-## 📂 项目结构
-
-```text
-iron-corridor/
-├── assets/
-│   └── readme/
-│       └── hero.svg           # 项目原生纯矢量 1200x440 CRT 复古题图
-├── docs/                      # 实机截图与手机试玩二维码
-│   ├── qr.png
-│   └── screenshot.png
-├── tools/
-│   └── gensprites.mjs         # 8×8 / 16×16 原始像素点阵生成器
-├── src/
-│   ├── core/                  # Web Audio 音效合成、RNG 种子与游戏常数
-│   │   ├── audio.ts
-│   │   ├── constants.ts
-│   │   └── rng.ts
-│   ├── data/                  # 敌人属性表、25 款部件定义与字库映射
-│   │   ├── enemies.ts
-│   │   └── upgrades.ts
-│   ├── entities/              # 玩家战车、敌方装甲群、弹丸与掉落废料
-│   │   ├── Bullet.ts
-│   │   ├── Enemy.ts
-│   │   ├── Pickup.ts
-│   │   └── Player.ts
-│   ├── scenes/                # Phaser 场景管理器（启动、主菜单、战斗、三选一、结算）
-│   │   ├── BootScene.ts
-│   │   ├── DraftScene.ts
-│   │   ├── GameOverScene.ts
-│   │   ├── GameScene.ts
-│   │   └── MenuScene.ts
-│   ├── systems/               # 竞技场生成、寻路流场 (Flowfield) 与碰撞判定
-│   │   ├── RunState.ts
-│   │   ├── arena.ts
-│   │   ├── collision.ts
-│   │   └── flowfield.ts
-│   ├── ui/                    # 点阵字体、HUD 状态栏与稀有度徽章
-│   │   ├── Hud.ts
-│   │   ├── PixelCjk.ts
-│   │   └── rarity.ts
-│   └── main.ts                # Phaser 游戏引擎实例初始化
-├── package.json               # 项目依赖与运行脚本
-├── tsconfig.json              # TypeScript 编译配置
-└── vite.config.ts             # Vite 构建与部署配置
-```
-
----
-
-## 🛠️ 本地运行与快速上手
-
-游戏基于 **Phaser 3 + TypeScript + Vite** 开发，运行环境需要现代支持 WebGL 与 Web Audio 的浏览器：
+Phaser 3 + TypeScript + Vite，需要 Node.js：
 
 ```bash
-# 1. 克隆代码仓库
 git clone https://github.com/holynova/iron-corridor.git
 cd iron-corridor
-
-# 2. 安装项目依赖
 npm install
-
-# 3. 启动本地热重载开发服务器（默认端口 5199）
-npm run dev
-
-# 4. 执行类型检查并打包生产构建
-npm run build
-
-# 5. 本地预览打包产物
-npm run preview
+npm run dev        # 开发服务器，默认端口 5199
+npm run build      # 类型检查 + 生产构建
+npm run preview    # 本地预览构建产物
 ```
 
----
+## 技术 / Tech
 
-## 📜 开源协议
+- Phaser 3.90 + TypeScript + Vite，WebGL 渲染，Web Audio 合成音效。
+- 全部像素素材由 `tools/gensprites.mjs` 在 8×8 / 16×16 点阵上程序化生成，非外部盗用素材；中文 UI 用 1-bit 阈值栅格化（`PixelCjk`）与英文点阵共用同一像素网格。
+- 敌军寻路用流场（flowfield），竞技场程序化生成，种子可复现（主菜单可填种子）。
+- 30 层深度色调由冷渐热（`DEPTH_TINT`），Boss 战有专属血条与警告横幅。
 
-本项目基于 [MIT License](LICENSE) 开源。欢迎 Star、Fork 或提交改进建议！
+```
+index.html              入口（800×720 画布）
+src/main.ts             Phaser 实例初始化
+src/scenes/             启动 / 主菜单 / 战斗 / 三选一 / 结算
+src/systems/            竞技场生成 / 流场寻路 / 碰撞 / 回合状态
+src/entities/           玩家 / 敌军 / 子弹 / 掉落
+src/data/               敌军属性表 / 25 种升级定义 / 字库映射
+src/core/               音效合成 / RNG 种子 / 常数 / 存档
+src/ui/                 点阵字体 / HUD / 稀有度徽章
+tools/gensprites.mjs    像素点阵生成器
+```
+
+## English
+
+**Iron Corridor** is a tank-battler roguelike for the browser: console-style top-down tank combat meets hardcore build depth. Procedurally generated single-screen corridors, 3 waves per depth, a giant boss every 5 depths, draft-one-of-three upgrades, and scrap that buys permanent arsenal upgrades.
+
+- **30 depths, 3 waves each**: clear every wave to descend; the palette shifts from cool to hot as you go deeper.
+- **Bosses**: Steel Overlord at depth 5 (900 HP), Overlord II at depth 10 (1,600 HP), Titan Protocol from depth 20 (2,800 HP) — each faster and deadlier.
+- **25 stackable upgrades in 4 rarities**: stat mods (caliber, autoloader, thrusters), weapon mutations (split barrel, piercing, HE, ricochet, homing), and tactical traits (extra dash, lifesteal, time-slow on kill, chain explosions).
+- **8 enemy types** — scout, gunner, heavy, sniper, charger, swarmer, turret, and the boss — with classic console silhouettes that telegraph their behavior.
+- **Meta progression**: scrap from runs buys permanent arsenal upgrades (hull, barrel, loader, engine, salvage, repair) that survive death.
+- **Controls**: WASD/arrows to move, mouse to aim, click or Space to fire, Shift/F to dash (with i-frames), Esc/P to pause.
+- **Run it**: `npm install && npm run dev` (port 5199). **Tech**: Phaser 3.90 + TypeScript + Vite; all pixel art is procedurally generated in-code (`tools/gensprites.mjs`); enemy pathfinding uses flow fields; runs are seed-reproducible.
+
+## 许可 / License
+
+MIT 协议（`package.json` 声明；仓库内暂无 LICENSE 文件）。
+
