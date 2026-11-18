@@ -1,25 +1,25 @@
+<p align="right"><a href="README.en.md">English</a></p>
+
 <p align="center">
   <img src="./assets/readme/hero.svg" width="100%" alt="铁甲回廊 Iron Corridor — 坦克大战 × Roguelike：像素坦克在砖墙回廊中对战，右上角是钢铁霸主 Boss 血条">
 </p>
 
 <p align="center">
-  <a href="https://holynova.github.io/iron-corridor/">▶ 在线玩 Play Online</a>
+  <a href="https://holynova.github.io/iron-corridor/">▶ 在线玩</a>
   ·
   <a href="https://github.com/holynova/iron-corridor">GitHub 仓库</a>
 </p>
 
 铁甲回廊是一款坦克大战 × Roguelike 网页游戏：红白机风格的俯视角坦克对战，配上硬核构筑深度。单屏程序化回廊、每层 3 波敌军、每 5 层一只巨型 Boss，升级三选一、25 种部件可叠加，废料还能换军械库永久强化。3 条命用完即宣告失败，每次出击都是全新开局。
 
-Iron Corridor is a tank-battler roguelike in the web browser: classic console-style top-down tank combat with hardcore build depth. Single-screen procedurally generated corridors, 3 waves per depth, a giant boss every 5 depths, draft-one-of-three upgrades (25 stackable parts), and scrap that buys permanent arsenal upgrades. Three lives, no continues — every run starts fresh.
-
-## 截图 / Screenshots
+## 截图
 
 <p align="center">
   <img src="./assets/readme/screenshot-game.png" width="420" alt="实机战斗：第 1 层第 1 波，玩家坦克在砖墙回廊中与绿、灰两辆敌坦交火">
   <img src="./assets/readme/screenshot-menu.png" width="420" alt="主菜单：铁甲回廊标题，出击 / 军械库 / 战绩 / 说明四个选项">
 </p>
 
-## 玩法 / How to Play
+## 玩法
 
 - **闯关**：共 30 层，每层是程序化生成的单屏回廊（砖墙、钢壁、掩体每次都不同），清掉 3 波敌军进入下一层。
 - **Boss**：每 5 层一只巨型 Boss——第 5 层「钢铁霸主」（900 HP）、第 10 层「钢铁霸主 II · 重装」（1600 HP）、第 20 层起「终焉协议 · 泰坦」（2800 HP），血量、弹速、伤害逐档跃升。
@@ -30,7 +30,7 @@ Iron Corridor is a tank-battler roguelike in the web browser: classic console-st
 - **军械库**：战斗掉落的废料可在主菜单换永久强化（船体 / 炮管 / 装填 / 引擎 / 拾荒 / 修复），死后不消失，越打越强。
 - **生命**：每局 3 条命，命用完即结算；战绩（出击次数、最深层数、最高击杀）保存在本地。
 
-## 敌军图鉴 / Enemies
+## 敌军图鉴
 
 8 种敌军，剪影与涂装对应经典街机分级，一眼可判行为：
 
@@ -45,7 +45,7 @@ Iron Corridor is a tank-battler roguelike in the web browser: classic console-st
 | 固定炮台 | 不动，96 HP，4 连发 |
 | 钢铁霸主 | Boss，900+ HP，5 连发重弹 |
 
-## 操作 / Controls
+## 操作
 
 | 动作 | 按键 |
 | :--- | :--- |
@@ -55,7 +55,7 @@ Iron Corridor is a tank-battler roguelike in the web browser: classic console-st
 | 冲刺（带无敌帧） | Shift 或 F |
 | 暂停 | Esc 或 P |
 
-## 本地运行 / Run Locally
+## 本地运行
 
 Phaser 3 + TypeScript + Vite，需要 Node.js：
 
@@ -68,7 +68,7 @@ npm run build      # 类型检查 + 生产构建
 npm run preview    # 本地预览构建产物
 ```
 
-## 技术 / Tech
+## 技术
 
 - Phaser 3.90 + TypeScript + Vite，WebGL 渲染，Web Audio 合成音效。
 - 全部像素素材由 `tools/gensprites.mjs` 在 8×8 / 16×16 点阵上程序化生成，非外部盗用素材；中文 UI 用 1-bit 阈值栅格化（`PixelCjk`）与英文点阵共用同一像素网格。
@@ -86,20 +86,3 @@ src/core/               音效合成 / RNG 种子 / 常数 / 存档
 src/ui/                 点阵字体 / HUD / 稀有度徽章
 tools/gensprites.mjs    像素点阵生成器
 ```
-
-## English
-
-**Iron Corridor** is a tank-battler roguelike for the browser: console-style top-down tank combat meets hardcore build depth. Procedurally generated single-screen corridors, 3 waves per depth, a giant boss every 5 depths, draft-one-of-three upgrades, and scrap that buys permanent arsenal upgrades.
-
-- **30 depths, 3 waves each**: clear every wave to descend; the palette shifts from cool to hot as you go deeper.
-- **Bosses**: Steel Overlord at depth 5 (900 HP), Overlord II at depth 10 (1,600 HP), Titan Protocol from depth 20 (2,800 HP) — each faster and deadlier.
-- **25 stackable upgrades in 4 rarities**: stat mods (caliber, autoloader, thrusters), weapon mutations (split barrel, piercing, HE, ricochet, homing), and tactical traits (extra dash, lifesteal, time-slow on kill, chain explosions).
-- **8 enemy types** — scout, gunner, heavy, sniper, charger, swarmer, turret, and the boss — with classic console silhouettes that telegraph their behavior.
-- **Meta progression**: scrap from runs buys permanent arsenal upgrades (hull, barrel, loader, engine, salvage, repair) that survive death.
-- **Controls**: WASD/arrows to move, mouse to aim, click or Space to fire, Shift/F to dash (with i-frames), Esc/P to pause.
-- **Run it**: `npm install && npm run dev` (port 5199). **Tech**: Phaser 3.90 + TypeScript + Vite; all pixel art is procedurally generated in-code (`tools/gensprites.mjs`); enemy pathfinding uses flow fields; runs are seed-reproducible.
-
-## 许可 / License
-
-MIT 协议（`package.json` 声明；仓库内暂无 LICENSE 文件）。
-
