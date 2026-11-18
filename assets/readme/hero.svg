@@ -1,5 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 440" width="100%" height="100%">
   <title>Iron Corridor - Project Hero</title>
+  <desc>铁甲回廊 Iron Corridor hero: pixel tanks battle in a brick corridor; a boss HP bar reads WARLORD HP 74%.</desc>
   <defs>
     <!-- CRT Cabinet Background Gradient -->
     <linearGradient id="arcadeBg" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -109,7 +110,7 @@
   <!-- Tech Metadata Bar -->
   <g transform="translate(58, 362)">
     <rect x="0" y="0" width="466" height="38" rx="8" fill="#0d1420" stroke="#1c2c40" stroke-width="1" />
-    <text x="16" y="24" font-family="'SF Mono', Monaco, Consolas, monospace" font-size="12" font-weight="600" fill="#4d6b8c">ENGINE STACK:</text>
+    <text x="16" y="24" font-family="'SF Mono', Monaco, Consolas, monospace" font-size="12" font-weight="600" fill="#7fa3c4">ENGINE STACK:</text>
     <text x="128" y="24" font-family="'SF Mono', Monaco, Consolas, monospace" font-size="12" font-weight="600" fill="#cad7e6">Phaser 3.90</text>
     <circle cx="218" cy="19" r="2.5" fill="#fcd424" />
     <text x="232" y="24" font-family="'SF Mono', Monaco, Consolas, monospace" font-size="12" font-weight="600" fill="#cad7e6">TypeScript / Vite</text>
@@ -221,6 +222,7 @@
 
       <!-- ==================== BOSS: IRON WARLORD (Right End) ==================== -->
       <g transform="translate(450, 105)">
+        <text x="-20" y="-52" font-family="'SF Mono', monospace" font-size="7.5" font-weight="700" fill="#ff4d5e">WARLORD HP 74%</text>
         <!-- Massive Boss Tracks -->
         <rect x="-30" y="-35" width="60" height="12" fill="#141a24" stroke="#e45820" stroke-width="1.5" />
         <rect x="-30" y="23" width="60" height="12" fill="#141a24" stroke="#e45820" stroke-width="1.5" />
@@ -237,7 +239,6 @@
         <!-- Boss Mega HP Bar -->
         <rect x="-35" y="-45" width="70" height="5" fill="#111722" stroke="#e45820" stroke-width="0.8" />
         <rect x="-35" y="-45" width="52" height="5" fill="#e45820" />
-        <text x="-20" y="-52" font-family="'SF Mono', monospace" font-size="7.5" font-weight="700" fill="#ff4d5e">WARLORD HP 74%</text>
       </g>
     </g>
 
